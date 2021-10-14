@@ -1,0 +1,47 @@
+stages:
+  - deploy-stage
+
+variables:
+  WORDPRESS_SITE_DIR: /var/www/html/blog
+  WORDPRESS_THEME_NAME: myBlog
+  WORDPRESS_PLUGINS: "ewww-image-optimizer google-sitemap-generator wp-sweep"
+  NODE_BIN_PATH: /usr/local/nvm/node/v14.15.3/bin
+  COMPOSER_BIN_PATH: /usr/local/bin/composer
+
+deploy-stage:
+  stage: deploy-stage
+  image: kroniak/ssh-client
+  script:
+    - chmod og= $STAGE_ID_RSA
+
+    # prepare destination server - clean destination directory except for /wp-content/uploads
+    - ssh -i $STAGE_ID_RSA -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "
+        find $WORDPRESS_SITE_DIR -mindepth 1 ! -regex '^$WORDPRESS_SITE_DIR/wp-content/uploads\(/.*\)?' -delete  || true"
+        
+    # install wordpress and plugins
+    - ssh -i $STAGE_ID_RSA -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "
+        cd $WORDPRESS_SITE_DIR && 
+        wp core download --version=5.8.1 --skip-content &&
+        wp core config --dbname=$STAGE_WORDPRESS_DB_NAME --dbuser=$STAGE_WORDPRESS_DB_USER --dbpass='$STAGE_WORDPRESS_DB_PASSWORD' --dbhost=$STAGE_WORDPRESS_DB_HOST &&
+        wp plugin install $WORDPRESS_PLUGINS"
+    
+    # deploy updated theme code to destination server
+    - ssh -i $STAGE_ID_RSA -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "mkdir -p $WORDPRESS_SITE_DIR/wp-content/themes/$WORDPRESS_THEME_NAME"
+    - scp -r -i $STAGE_ID_RSA ./wp-content/themes/$WORDPRESS_THEME_NAME $STAGE_SERVER_USER@$STAGE_SERVER_IP:$WORDPRESS_SITE_DIR/wp-content/themes/
+
+    # build Underscores theme artifacts on destination server
+    - ssh -i $STAGE_ID_RSA -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "
+        export PATH=$PATH:$NODE_BIN_PATH:$COMPOSER_BIN_PATH &&
+        cd $WORDPRESS_SITE_DIR/wp-content/themes/$WORDPRESS_THEME_NAME && 
+        composer install &&
+        npm install"
+
+    # enable deployed theme and plugins
+    - ssh -i $STAGE_ID_RSA -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "
+        cd $WORDPRESS_SITE_DIR && 
+        wp theme activate $WORDPRESS_THEME_NAME &&
+        wp plugin activate $WORDPRESS_PLUGINS"
+
+    # ensure Wordpress and plugins have permissions on content/themes/plugin dirs
+    - ssh -i $STAGE_ID_RSA -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "
+        chgrp -R www-data $WORDPRESS_SITE_DIR || true"
