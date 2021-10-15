@@ -2,7 +2,9 @@
 
 A sample project that demonstrates how to auto-deploy a WordPress site using GitLab CI/CD. Deployments are handled over SSH. 
 
-**Note**: The process defined in this project **does not** include deploying content (posts or uploaded assets). Content stored in the database and on the filesystem within `wp-content/uploads/*` will not be modified by this project.
+![GitLab Auto Deployment Process](https://taylor.callsen.me/wp-content/uploads/2021/10/GitLab_CI_Deployment_of_WordPress_Site-Taylor_Callsen_October_2021.jpg)
+
+**Note**: The process described in this project **does not** modify or deploy content stored in the database or on the filesystem in `wp-content/uploads/*`.
 
 ## Repository Structure
 
