@@ -2,7 +2,7 @@
 
 A sample project that demonstrates how to auto-deploy a WordPress site using GitLab CI/CD. Deployments are handled over SSH. 
 
-![GitLab Auto Deployment Process](https://taylor.callsen.me/wp-content/uploads/2021/10/GitLab_CI_Deployment_of_WordPress_Site-Taylor_Callsen_October_2021.jpg)
+![GitLab Auto Deployment Process](https://taylor.callsen.me/wp-content/uploads/2021/10/GitLab_CI_Deployment_of_WordPress_Site-Taylor_Callsen_October_2021_v2.png)
 
 **Note**: The process described in this project **does not** modify or deploy content stored in the database or on the filesystem in `wp-content/uploads/*`.
 
@@ -52,9 +52,9 @@ Steps 3-5 on this [DigitalOcean Guide](https://www.digitalocean.com/community/tu
 
 After configuring the SSH connection information, ensure the following WordPress specific CI/CD variables are available to the GitLab project:
 
-- `STAGE_WORDPRESS_DB_HOST` - WordPress databsae host.
-- `STAGE_WORDPRESS_DB_NAME` - WordPress databsae name.
-- `STAGE_WORDPRESS_DB_USER` - WordPress databsae user.
+- `STAGE_WORDPRESS_DB_HOST` - WordPress database host.
+- `STAGE_WORDPRESS_DB_NAME` - WordPress database name.
+- `STAGE_WORDPRESS_DB_USER` - WordPress database user.
 - `STAGE_WORDPRESS_DB_PASSWORD` - WordPress databsae password.
 
 ### Deployment Paths
@@ -66,4 +66,4 @@ Configuration variables are defined at the top of the `.gitlab-ci.yaml` file tha
 
 ## Supplemental Blog Post
 
-Here is a blog post I created that explains this project and the CI/CD process in further detail: Coming Soon
+Here is a blog post I created that explains this project and the CI/CD process in further detail: [https://taylor.callsen.me/simple-wordpress-auto-deployment-using-gitlab-ci-cd/](https://taylor.callsen.me/simple-wordpress-auto-deployment-using-gitlab-ci-cd/)
