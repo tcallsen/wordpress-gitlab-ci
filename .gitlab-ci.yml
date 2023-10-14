@@ -2,6 +2,7 @@ stages:
   - deploy-stage
 
 variables:
+  WORDPRESS_VERSION: "6.3.2"
   WORDPRESS_SITE_DIR: /var/www/html/blog
   WORDPRESS_THEME_NAME: myBlog
   WORDPRESS_PLUGINS: "ewww-image-optimizer google-sitemap-generator wp-sweep"
@@ -21,7 +22,7 @@ deploy-stage:
     # install wordpress and plugins
     - ssh -i $STAGE_ID_RSA -o StrictHostKeyChecking=no $STAGE_SERVER_USER@$STAGE_SERVER_IP "
         cd $WORDPRESS_SITE_DIR && 
-        wp core download --version=5.8.1 --skip-content &&
+        wp core download --version=$WORDPRESS_VERSION --skip-content &&
         wp core config --dbname=$STAGE_WORDPRESS_DB_NAME --dbuser=$STAGE_WORDPRESS_DB_USER --dbpass='$STAGE_WORDPRESS_DB_PASSWORD' --dbhost=$STAGE_WORDPRESS_DB_HOST &&
         wp plugin install $WORDPRESS_PLUGINS"
     

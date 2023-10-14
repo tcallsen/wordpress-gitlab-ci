@@ -17,7 +17,7 @@ This sample repo contains a theme called `myBlog`, which was generated using the
 The following dependencies are required for local development, and should also be available on the Destination Deployment server:
 
 - [WP-CLI](https://wp-cli.org/)
-- NodeJS and NPM
+- Node.js and NPM
 - Composer
 
 ## Local Development

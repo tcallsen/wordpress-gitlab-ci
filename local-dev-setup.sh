@@ -20,7 +20,7 @@ cd $DEST_DIR
 find $DEST_DIR -mindepth 1 ! -regex '^$DEST_DIR/wp-content/uploads\(/.*\)?' -delete
 
 # install wordpress and plugins; configure db
-wp core download --allow-root --version=5.8.1 --skip-content
+wp core download --allow-root --version=6.3.2 --skip-content
 wp core config --allow-root --dbname=$WP_DB_NAME --dbuser=$WP_DB_USER --dbpass=$WP_DB_PASS --dbhost=$WP_DB_HOST
 wp plugin install --allow-root ewww-image-optimizer google-sitemap-generator wp-sweep
 
